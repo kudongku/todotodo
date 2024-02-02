@@ -1,9 +1,7 @@
 package com.sparta.todotodo.user.controller;
 
-import com.sparta.todotodo.user.dto.LoginRequestDto;
 import com.sparta.todotodo.user.dto.SignupRequestDto;
 import com.sparta.todotodo.user.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +20,7 @@ public class UserController {
         return "signup";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/login-page")
     public String loginPage() {
         return "login";
     }
@@ -31,17 +29,7 @@ public class UserController {
     public String signup(SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
 
-        return "redirect:/user/login";
+        return "redirect:/user/login-page";
     }
 
-    @PostMapping("/login")
-    public String login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        try {
-            userService.login(loginRequestDto, response);
-        } catch (Exception e) {
-            return "redirect:/user/login?error";
-        }
-
-        return "redirect:/";
-    }
 }
