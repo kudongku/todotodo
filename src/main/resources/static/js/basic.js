@@ -38,20 +38,23 @@ function getMessages() {
                 let message = response[i];
                 let id = message['id'];
                 let title = message['title'];
-
-                addHTML(id, title);
+                let state = message['todoState']
+                addHTML(id, title, state);
             }
         }
     })
 }
 
 // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
-function addHTML(id, title) {
+function addHTML(id, title, state) {
     // 1. HTML 태그를 만듭니다.
     let tempHtml =
         `<div class="card" onclick="showDetails('${id}')">
             <div id="${id}-title" class="title">
                 ${title}
+            </div>
+            <div id="${id}-state" class="title">
+                ${state}
             </div>
         </div>`;
     // 2. #cards-box 에 HTML을 붙인다.
@@ -70,19 +73,24 @@ function showDetails(id) {
             let title = response['title'];
             let username = response['username']
             let content = response['content'];
-            showDetailHTML(id, title, content, username, modifiedAt);
+            let state = response['todoState']
+            showDetailHTML(id, title, content, username, state, modifiedAt);
         }
     })
 }
 
 // 세부사항을 html 중간에 보여줍니다.
-function showDetailHTML(id, title, content, username, modifiedAt) {
+function showDetailHTML(id, title, content, username, state, modifiedAt) {
     // 1. HTML 태그를 만듭니다.
     let tempHtml =
         `<div class="card">
                 <div class="content">
                     <div id="${id}-date" class="string">
                         ${modifiedAt}
+                    </div>
+                    <br>
+                    <div id="${id}-state" class="string">
+                        ${state}
                     </div>
                     <br>
                     <div id="${id}-username" class="string">
@@ -105,6 +113,8 @@ function showDetailHTML(id, title, content, username, modifiedAt) {
 
                 <!-- 버튼 영역-->
                 <div class="footer">
+                    <button onclick="doingTodo('${id}')">하는중</button>
+                    <button onclick="doneTodo('${id}')">완료</button>
                     <button onclick="editPost('${id}')">수정하기</button>
                     <button onclick="deleteOne('${id}')">삭제하기</button>
                     <button onclick="submitEdit('${id}')"> 제출하기</button>
@@ -168,6 +178,30 @@ function deleteOne(id) {
         contentType: "application/json",
         success: function (response) {
             alert('메시지 삭제에 성공하였습니다.');
+            window.location.reload();
+        }
+    })
+}
+
+function doingTodo(id) {
+    $.ajax({
+        type: "GET",
+        url: `/todos/doing/${id}`,
+        contentType: "application/json",
+        success: function (response) {
+            alert('메시지 수정에 성공하였습니다.');
+            window.location.reload();
+        }
+    })
+}
+
+function doneTodo(id) {
+    $.ajax({
+        type: "GET",
+        url: `/todos/done/${id}`,
+        contentType: "application/json",
+        success: function (response) {
+            alert('메시지 수정에 성공하였습니다.');
             window.location.reload();
         }
     })

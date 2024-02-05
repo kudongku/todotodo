@@ -69,4 +69,24 @@ public class TodoService {
             todoRepository.delete(todo);
         }
     }
+    @Transactional
+    public void doingTodo(User user, Long id) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("등록된 적이 없는 할일입니다.")
+        );
+        if(todo.getUser().getId().equals(user.getId()) || user.getRole().equals(ADMIN)){
+            todo.doing();
+        }
+        System.out.println("todo.getTodoState() = " + todo.getTodoState());
+    }
+    @Transactional
+    public void doneTodo(User user, Long id) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("등록된 적이 없는 할일입니다.")
+        );
+        if(todo.getUser().getId().equals(user.getId()) || user.getRole().equals(ADMIN)){
+            todo.done();
+        }
+        System.out.println("todo.getTodoState() = " + todo.getTodoState());
+    }
 }

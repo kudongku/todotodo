@@ -42,4 +42,14 @@ public class TodoController {
     public void deleteTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id){
         todoService.deleteTodo(userDetails.getUser(), id);
     }
+
+    @GetMapping("/doing/{id}")
+    public void doingTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        todoService.doingTodo(userDetails.getUser(), id);
+    }
+
+    @GetMapping("/done/{id}")
+    public void doneTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        todoService.doneTodo(userDetails.getUser(), id);
+    }
 }
