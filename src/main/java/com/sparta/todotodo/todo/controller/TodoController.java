@@ -32,4 +32,10 @@ public class TodoController {
     public TodoResponseDto getTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         return todoService.getTodo(userDetails.getUser(), id);
     }
+
+    @PutMapping("/{id}")
+    public void updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto){
+        todoService.updateTodo(todoRequestDto, id);
+    }
+
 }

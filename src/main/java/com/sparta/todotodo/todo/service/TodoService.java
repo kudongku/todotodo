@@ -7,6 +7,7 @@ import com.sparta.todotodo.todo.repository.TodoRepository;
 import com.sparta.todotodo.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,5 +49,14 @@ public class TodoService {
         }
 
         return new TodoResponseDto(todo);
+    }
+
+    @Transactional
+    public void updateTodo(TodoRequestDto todoRequestDto, Long id) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("등록된 적이 없는 할일입니다.")
+        );
+
+        todo.update(todoRequestDto);
     }
 }

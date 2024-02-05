@@ -96,12 +96,17 @@ function showDetailHTML(id, title, content, username, modifiedAt) {
                     <div id="${id}-content" class="string">
                         ${content}
                     </div>
+
+                    <div id="${id}-editarea" class="edit">
+                        <textarea id="${id}-titleArea" class="te-edit" name="" id="22" cols="30" rows="1"></textarea>
+                        <textarea id="${id}-contentArea" class="te-edit" name="" id="32" cols="30" rows="3"></textarea>
+                    </div>
                 </div>
 
                 <!-- 버튼 영역-->
                 <div class="footer">
                     <button onclick="editPost('${id}')">수정하기</button>
-                    <button onclick="deletePost('${id}')">삭제하기</button>
+                    <button onclick="deleteOne('${id}')">삭제하기</button>
                     <button onclick="submitEdit('${id}')"> 제출하기</button>
                 </div>
         </div>`;
@@ -135,45 +140,24 @@ function showEdits(id) {
 
 // 메모를 수정합니다.
 function submitEdit(id) {
-    // 1. 작성 대상 메모의 username과 content 를 확인합니다.
-    let date = $(`#${id}-dateArea`).val();
-    let writer = $(`#${id}-writerArea`).val();
     let title = $(`#${id}-titleArea`).val();
-    let password = $(`#${id}-passwordArea`).val();
     let content = $(`#${id}-contentArea`).val();
 
 
     // 3. 전달할 data JSON으로 만듭니다.
-    let data = {'writer': writer, 'content': content, 'password': password, 'date': date, 'title': title};
+    let data = {'content': content, 'title': title};
 
     // 4. PUT /api/memos/{id} 에 data를 전달합니다.
     $.ajax({
         type: "PUT",
-        url: `/calender/${id}`,
+        url: `/todos/${id}`,
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (response) {
-            if(response===true){
-                alert('메시지 변경에 성공하였습니다.');
-                window.location.reload();
-            }else{
-                alert("비밀번호가 틀립니다.")
-            }
+            alert('메시지 변경에 성공하였습니다.');
+            window.location.reload();
         }
     });
-}
-
-// 일정을 삭제합니다.
-function deletePost(id) {
-    showDelete(id);
-}
-
-// 비밀번호 입력창을 보여줍니다.
-function showDelete(id) {
-    $(`#${id}-Deletearea`).show();
-
-    $(`#${id}-content`).hide();
-    $(`#${id}-edit`).hide();
 }
 
 //api 를 통해 삭제합니다.
@@ -186,10 +170,10 @@ function deleteOne(id) {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (response) {
-            if(response===true){
+            if (response === true) {
                 alert('메시지 삭제에 성공하였습니다.');
                 window.location.reload();
-            }else{
+            } else {
                 alert("비밀번호가 틀립니다.")
             }
         }
