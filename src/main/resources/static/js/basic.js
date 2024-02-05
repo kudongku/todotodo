@@ -1,31 +1,9 @@
-// 캘린더 작성하기
-function writePost() {
-    // 1. 작성한 메모를 불러옵니다.
-    let title = $('#title').val();
-    let content = $('#content').val();
-
-    // 3. 전달할 data JSON으로 만듭니다.
-    let data = {'title': title, 'content': content};
-
-    // 5. POST /api/memos 에 data를 전달합니다.
-    $.ajax({
-        type: "POST",
-        url: "/todos",
-        contentType: "application/json",
-        data: JSON.stringify(data),
-        success: function () {
-            alert('메시지가 성공적으로 작성되었습니다.');
-            window.location.reload();
-        }
-    });
-}
-
-// // HTML 문서를 로드할 때마다 실행합니다.
+// HTML 문서를 로드할 때마다 실행합니다.
 $(document).ready(function () {
     getMessages();
 })
-//
-// // 메모를 불러와서 보여줍니다.
+
+// 메모를 불러와서 보여줍니다.
 function getMessages() {
     // 1. 기존 메모 내용을 지웁니다.
     $('#cards-box').empty();
@@ -51,15 +29,37 @@ function addHTML(id, title, state) {
     let tempHtml =
         `<div class="card" onclick="showDetails('${id}')">
             <div id="${id}-title" class="title">
-                ${title}
-            </div>
-            <div id="${id}-state" class="title">
-                ${state}
+                ${title} : ${state}
             </div>
         </div>`;
     // 2. #cards-box 에 HTML을 붙인다.
     $('#cards-box').append(tempHtml);
 }
+
+
+// 캘린더 작성하기
+function writePost() {
+    // 1. 작성한 메모를 불러옵니다.
+    let title = $('#title').val();
+    let content = $('#content').val();
+
+    // 3. 전달할 data JSON으로 만듭니다.
+    let data = {'title': title, 'content': content};
+
+    // 5. POST /api/memos 에 data를 전달합니다.
+    $.ajax({
+        type: "POST",
+        url: "/todos",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function () {
+            alert('메시지가 성공적으로 작성되었습니다.');
+            window.location.reload();
+        }
+    });
+}
+
+
 
 // 일정 세부사항 보기 + 수정, 삭제하기
 function showDetails(id) {
@@ -84,7 +84,7 @@ function showDetailHTML(id, title, content, username, state, modifiedAt) {
     // 1. HTML 태그를 만듭니다.
     let tempHtml =
         `<div class="card">
-                <div class="content">
+                <div class="content" id="${id}-contents">
                     <div id="${id}-date" class="string">
                         ${modifiedAt}
                     </div>
@@ -106,8 +106,10 @@ function showDetailHTML(id, title, content, username, state, modifiedAt) {
                     </div>
 
                     <div id="${id}-editarea" class="edit">
-                        <textarea id="${id}-titleArea" class="te-edit" name="" id="22" cols="30" rows="1"></textarea>
-                        <textarea id="${id}-contentArea" class="te-edit" name="" id="32" cols="30" rows="3"></textarea>
+                        <textarea id="${id}-titleArea" class="te-edit" placeholder="일정 제목을 입력해주세요" name="" id="22" cols="30" rows="3"></textarea>
+                        <br>
+                        <textarea id="${id}-contentArea" class="te-edit" placeholder="일정 내용을 입력해주세요" name="" id="32" cols="30" rows="5"></textarea>
+                        <br>
                     </div>
                 </div>
 
@@ -115,36 +117,31 @@ function showDetailHTML(id, title, content, username, state, modifiedAt) {
                 <div class="footer">
                     <button onclick="doingTodo('${id}')">하는중</button>
                     <button onclick="doneTodo('${id}')">완료</button>
-                    <button onclick="editPost('${id}')">수정하기</button>
+                    <button onclick="editPost('${id}')" id="${id}-edit">수정하기</button>
                     <button onclick="deleteOne('${id}')">삭제하기</button>
-                    <button onclick="submitEdit('${id}')"> 제출하기</button>
+                    <button onclick="submitEdit('${id}')" id="${id}-submit"> 제출하기</button>
                 </div>
         </div>`;
 
     // 2. #cards-box 에 HTML을 붙인다.
     $('#detail-box').append(tempHtml);
+    $(`#${id}-editarea`).hide();
+    $(`#${id}-submit`).hide();
 }
 
 // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
 function editPost(id) {
     showEdits(id);
-    let date = $(`#${id}-date`).text().trim();
-    let writer = $(`#${id}-username`).text().trim();
     let title = $(`#${id}-title`).text().trim();
     let content = $(`#${id}-content`).text().trim();
     $(`#${id}-titleArea`).val(title);
     $(`#${id}-contentArea`).val(content);
-    $(`#${id}-writerArea`).val(writer);
-    $(`#${id}-dateArea`).val(date);
 }
 
 // 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
 function showEdits(id) {
     $(`#${id}-editarea`).show();
     $(`#${id}-submit`).show();
-    $(`#${id}-delete`).show();
-
-    $(`#${id}-content`).hide();
     $(`#${id}-edit`).hide();
 }
 
