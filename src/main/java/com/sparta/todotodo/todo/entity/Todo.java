@@ -26,8 +26,7 @@ public class Todo extends Timestamped{
     @Column
     private String content;
 
-    @Column
-    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private TodoState todoState;
 
     @ManyToOne(fetch = FetchType.EAGER)

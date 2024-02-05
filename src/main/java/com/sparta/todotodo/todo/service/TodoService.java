@@ -26,7 +26,6 @@ public class TodoService {
     }
 
     public List<TodoResponseDto> getTodoList(User user) {
-        System.out.println("user.getRole() = " + user.getRole());
         if (user.getRole().equals(USER)) {
             return todoRepository.findAllByUser(user)
                     .stream()
@@ -77,7 +76,6 @@ public class TodoService {
         if(todo.getUser().getId().equals(user.getId()) || user.getRole().equals(ADMIN)){
             todo.doing();
         }
-        System.out.println("todo.getTodoState() = " + todo.getTodoState());
     }
     @Transactional
     public void doneTodo(User user, Long id) {
@@ -87,6 +85,5 @@ public class TodoService {
         if(todo.getUser().getId().equals(user.getId()) || user.getRole().equals(ADMIN)){
             todo.done();
         }
-        System.out.println("todo.getTodoState() = " + todo.getTodoState());
     }
 }
