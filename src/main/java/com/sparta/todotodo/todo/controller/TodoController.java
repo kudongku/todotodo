@@ -23,11 +23,11 @@ public class TodoController {
         todoService.createTodo(userDetails.getUser(), todoRequestDto);
     }
 
-//    @GetMapping("")
-//    public List<TodoResponseDto> getTodoList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return todoService.getTodoList(userDetails.getUser());
-//    }
-//
+    @GetMapping("")
+    public List<TodoResponseDto> getTodoList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return todoService.getTodoList(userDetails.getUser());
+    }
+
 //    @GetMapping("/{id}")
 //    public TodoResponseDto getTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
 //        return todoService.getTodo(userDetails.getUser(), id);
