@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <title>TodoTodo</title>
-    <
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -27,16 +26,22 @@
         </a>
     </div>
 
-    <div id="login-false">
-        <div id="header-title-select-shop">
-            My Select Shop
-        </div>
-        <a id="sign-text" href="/user/signup">
-            회원가입
-        </a>
-        <a id="login-text" href="/user/login-page">
-            로그인
-        </a>
+    <div class="block">
+        <textarea class="field" placeholder="일정 제목을 입력해주세요" name="title" id="title" cols="30"
+                      rows="3"></textarea>
+        <br>
+        <textarea class="field" placeholder="일정 내용을 입력해주세요" name="content" id="content" cols="30"
+                  rows="5"></textarea>
+        <br>
+        <button onclick="writePost()"> 제출하기 </button>
+    </div>
+
+    <div id="detail-box" class="block">
+
+    </div>
+
+    <div id="cards-box" class="block">
+
     </div>
 
 </div>
