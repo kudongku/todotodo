@@ -28,10 +28,10 @@ public class TodoController {
         return todoService.getTodoList(userDetails.getUser());
     }
 
-//    @GetMapping("/{id}")
-//    public TodoResponseDto getTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
-//        return todoService.getTodo(userDetails.getUser(), id);
-//    }
+    @GetMapping("/{id}")
+    public TodoResponseDto getTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+        return todoService.getTodo(userDetails.getUser(), id);
+    }
 
 //    @Secured(UserRole.Authority.ADMIN) // 관리자용
 //    @GetMapping("/products/secured")

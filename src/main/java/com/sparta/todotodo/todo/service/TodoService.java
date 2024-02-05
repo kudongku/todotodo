@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,10 @@ public class TodoService {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("등록된 적이 없는 할일입니다.")
         );
+
+        if(!(Objects.equals(todo.getUser().getId(), user.getId()))){
+            throw new IllegalArgumentException("해당 유저가 소유한 할일 아이디가 아닙니다.");
+        }
 
         return new TodoResponseDto(todo);
     }

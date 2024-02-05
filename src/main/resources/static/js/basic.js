@@ -37,11 +37,9 @@ function getMessages() {
             for (let i = 0; i < response.length; i++) {
                 let message = response[i];
                 let id = message['id'];
-                let modifiedAt = message['modifiedAt'];
                 let title = message['title'];
-                let content = message['content'];
 
-                addHTML(id, title, content, modifiedAt);
+                addHTML(id, title);
             }
         }
     })
@@ -51,13 +49,146 @@ function getMessages() {
 function addHTML(id, title) {
     // 1. HTML 태그를 만듭니다.
     let tempHtml =
-        `<div class="card">
+        `<div class="card" onclick="showDetails('${id}')">
             <div id="${id}-title" class="title">
                 ${title}
             </div>
         </div>`;
     // 2. #cards-box 에 HTML을 붙인다.
     $('#cards-box').append(tempHtml);
+}
+
+// 일정 세부사항 보기 + 수정, 삭제하기
+function showDetails(id) {
+    $('#detail-box').empty();
+    $.ajax({
+        type: 'GET',
+        url: `/todos/${id}`,
+        success: function (response) {
+            let id = response['id'];
+            let modifiedAt = response['modifiedAt'];
+            let title = response['title'];
+            let content = response['content'];
+            showDetailHTML(id, title, content, modifiedAt);
+        }
+    })
+}
+
+// 세부사항을 html 중간에 보여줍니다.
+function showDetailHTML(id, title, content, modifiedAt) {
+    // 1. HTML 태그를 만듭니다.
+    let tempHtml =
+        `<div class="card">
+                <div class="content">
+                    <div id="${id}-date" class="string">
+                        ${modifiedAt}
+                    </div>
+                    <br>
+                    <div id="${id}-title" class="string">
+                        ${title}
+                    </div>
+                    <br>
+                    <div id="${id}-content" class="string">
+                        ${content}
+                    </div>
+                </div>
+
+                <!-- 버튼 영역-->
+                <div class="footer">
+                    <button onclick="editPost('${id}')">수정하기</button>
+                    <button onclick="deletePost('${id}')">삭제하기</button>
+                    <button onclick="submitEdit('${id}')"> 제출하기</button>
+                </div>
+        </div>`;
+
+    // 2. #cards-box 에 HTML을 붙인다.
+    $('#detail-box').append(tempHtml);
+}
+
+// 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
+function editPost(id) {
+    showEdits(id);
+    let date = $(`#${id}-date`).text().trim();
+    let writer = $(`#${id}-username`).text().trim();
+    let title = $(`#${id}-title`).text().trim();
+    let content = $(`#${id}-content`).text().trim();
+    $(`#${id}-titleArea`).val(title);
+    $(`#${id}-contentArea`).val(content);
+    $(`#${id}-writerArea`).val(writer);
+    $(`#${id}-dateArea`).val(date);
+}
+
+// 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
+function showEdits(id) {
+    $(`#${id}-editarea`).show();
+    $(`#${id}-submit`).show();
+    $(`#${id}-delete`).show();
+
+    $(`#${id}-content`).hide();
+    $(`#${id}-edit`).hide();
+}
+
+// 메모를 수정합니다.
+function submitEdit(id) {
+    // 1. 작성 대상 메모의 username과 content 를 확인합니다.
+    let date = $(`#${id}-dateArea`).val();
+    let writer = $(`#${id}-writerArea`).val();
+    let title = $(`#${id}-titleArea`).val();
+    let password = $(`#${id}-passwordArea`).val();
+    let content = $(`#${id}-contentArea`).val();
+
+
+    // 3. 전달할 data JSON으로 만듭니다.
+    let data = {'writer': writer, 'content': content, 'password': password, 'date': date, 'title': title};
+
+    // 4. PUT /api/memos/{id} 에 data를 전달합니다.
+    $.ajax({
+        type: "PUT",
+        url: `/calender/${id}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            if(response===true){
+                alert('메시지 변경에 성공하였습니다.');
+                window.location.reload();
+            }else{
+                alert("비밀번호가 틀립니다.")
+            }
+        }
+    });
+}
+
+// 일정을 삭제합니다.
+function deletePost(id) {
+    showDelete(id);
+}
+
+// 비밀번호 입력창을 보여줍니다.
+function showDelete(id) {
+    $(`#${id}-Deletearea`).show();
+
+    $(`#${id}-content`).hide();
+    $(`#${id}-edit`).hide();
+}
+
+//api 를 통해 삭제합니다.
+function deleteOne(id) {
+    let password = $(`#${id}-passwordAreaForDelete`).val();
+    let data = {'id': id, 'password': password};
+    $.ajax({
+        type: "DELETE",
+        url: `/calender/${id}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            if(response===true){
+                alert('메시지 삭제에 성공하였습니다.');
+                window.location.reload();
+            }else{
+                alert("비밀번호가 틀립니다.")
+            }
+        }
+    })
 }
 
 let host = 'http://' + window.location.host;
