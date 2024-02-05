@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
+import static com.sparta.todotodo.user.entity.UserRole.USER;
+
 @Service
 @RequiredArgsConstructor
 public class TodoService {
@@ -22,10 +24,18 @@ public class TodoService {
     }
 
     public List<TodoResponseDto> getTodoList(User user) {
-        return todoRepository.findAllByUser(user)
-                .stream()
-                .map(TodoResponseDto::new)
-                .toList();
+        System.out.println("user.getRole() = " + user.getRole());
+        if (user.getRole().equals(USER)) {
+            return todoRepository.findAllByUser(user)
+                    .stream()
+                    .map(TodoResponseDto::new)
+                    .toList();
+        } else {
+            return todoRepository.findAll()
+                    .stream()
+                    .map(TodoResponseDto::new)
+                    .toList();
+        }
     }
 
     public TodoResponseDto getTodo(User user, Long id) {
@@ -33,7 +43,7 @@ public class TodoService {
                 () -> new NullPointerException("등록된 적이 없는 할일입니다.")
         );
 
-        if(!(Objects.equals(todo.getUser().getId(), user.getId()))){
+        if (user.getRole().equals(USER) && (!(Objects.equals(todo.getUser().getId(), user.getId())))) {
             throw new IllegalArgumentException("해당 유저가 소유한 할일 아이디가 아닙니다.");
         }
 

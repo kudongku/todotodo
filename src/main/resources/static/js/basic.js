@@ -68,20 +68,25 @@ function showDetails(id) {
             let id = response['id'];
             let modifiedAt = response['modifiedAt'];
             let title = response['title'];
+            let username = response['username']
             let content = response['content'];
-            showDetailHTML(id, title, content, modifiedAt);
+            showDetailHTML(id, title, content, username, modifiedAt);
         }
     })
 }
 
 // 세부사항을 html 중간에 보여줍니다.
-function showDetailHTML(id, title, content, modifiedAt) {
+function showDetailHTML(id, title, content, username, modifiedAt) {
     // 1. HTML 태그를 만듭니다.
     let tempHtml =
         `<div class="card">
                 <div class="content">
                     <div id="${id}-date" class="string">
                         ${modifiedAt}
+                    </div>
+                    <br>
+                    <div id="${id}-username" class="string">
+                        ${username}
                     </div>
                     <br>
                     <div id="${id}-title" class="string">

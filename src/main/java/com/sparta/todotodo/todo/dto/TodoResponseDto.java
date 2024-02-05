@@ -13,6 +13,7 @@ public class TodoResponseDto {
     private Long id;
     private String title;
     private String content;
+    private String username;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -20,6 +21,7 @@ public class TodoResponseDto {
         this.id = todo.getId();
         this.title = todo.getTitle();
         this.content = todo.getContent();
+        this.username = todo.getUser().getUsername();
         this.createdAt = todo.getCreatedAt();
         this.modifiedAt = todo.getModifiedAt();
     }

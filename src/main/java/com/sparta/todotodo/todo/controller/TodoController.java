@@ -32,15 +32,4 @@ public class TodoController {
     public TodoResponseDto getTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         return todoService.getTodo(userDetails.getUser(), id);
     }
-
-//    @Secured(UserRole.Authority.ADMIN) // 관리자용
-//    @GetMapping("/products/secured")
-//    public String getProductsByAdmin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        System.out.println("userDetails.getUsername() = " + userDetails.getUsername());
-//        for (GrantedAuthority authority : userDetails.getAuthorities()) {
-//            System.out.println("authority.getAuthority() = " + authority.getAuthority());
-//        }
-//
-//        return "redirect:/";
-//    }
 }
