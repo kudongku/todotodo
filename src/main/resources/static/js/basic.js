@@ -162,20 +162,13 @@ function submitEdit(id) {
 
 //api 를 통해 삭제합니다.
 function deleteOne(id) {
-    let password = $(`#${id}-passwordAreaForDelete`).val();
-    let data = {'id': id, 'password': password};
     $.ajax({
         type: "DELETE",
-        url: `/calender/${id}`,
+        url: `/todos/${id}`,
         contentType: "application/json",
-        data: JSON.stringify(data),
         success: function (response) {
-            if (response === true) {
-                alert('메시지 삭제에 성공하였습니다.');
-                window.location.reload();
-            } else {
-                alert("비밀번호가 틀립니다.")
-            }
+            alert('메시지 삭제에 성공하였습니다.');
+            window.location.reload();
         }
     })
 }

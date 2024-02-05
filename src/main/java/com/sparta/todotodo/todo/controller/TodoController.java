@@ -38,4 +38,8 @@ public class TodoController {
         todoService.updateTodo(todoRequestDto, id);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id){
+        todoService.deleteTodo(userDetails.getUser(), id);
+    }
 }

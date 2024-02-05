@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+import static com.sparta.todotodo.user.entity.UserRole.ADMIN;
 import static com.sparta.todotodo.user.entity.UserRole.USER;
 
 @Service
@@ -58,5 +59,14 @@ public class TodoService {
         );
 
         todo.update(todoRequestDto);
+    }
+
+    public void deleteTodo(User user, Long id) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("등록된 적이 없는 할일입니다.")
+        );
+        if(todo.getUser().getId().equals(user.getId()) || user.getRole().equals(ADMIN)){
+            todoRepository.delete(todo);
+        }
     }
 }
