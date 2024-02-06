@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+
 </head>
 <body>
 <div class="container">
@@ -12,20 +18,20 @@
         <h2>회원가입 페이지</h2>
     </div>
 
-    <form action="/user/signup" method="post" class="block">
+    <div class="block">
         <div>
             <label class="signup-id-label"> 아이디
-                <input type="text" name="username" class="signup-input">
+                <input id="username" type="text" name="username" class="signup-input">
             </label>
         </div>
         <div>
             <label class="signup-password-label">비밀번호
-                <input type="text" name="password" class="signup-input">
+                <input id="password" type="text" name="password" class="signup-input">
             </label>
         </div>
         <div>
             <label class="signup-email-label">이메일
-                <input type="text" name="email" class="signup-input">
+                <input id="email" type="text" name="email" class="signup-input">
             </label>
         </div>
         <div>
@@ -33,8 +39,8 @@
             <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="signup-input-box"
                    style="display:none">
         </div>
-        <button class="signup-submit">가입하기</button>
-    </form>
+        <button class="signup-submit" onclick="postSignup()">가입하기</button>
+    </div>
 </div>
 </body>
 <script>
@@ -50,6 +56,37 @@
         } else {
             box.style.display = "none";
         }
+    }
+
+    function postSignup() {
+        let username = $('#username').val();
+        let password = $('#password').val();
+        let email = $('#email').val();
+        let admin = (document.getElementById("admin-check").checked === true);
+        let adminToken = $('#admin-token').val();
+        // 3. 전달할 data JSON으로 만듭니다.
+        let data = {
+            'username': username,
+            'password': password,
+            'email' : email,
+            'admin': admin,
+            'adminToken': adminToken
+        };
+
+        // 5. POST /api/memos 에 data를 전달합니다.
+        $.ajax({
+            type: "POST",
+            url: "/user/signup",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response) {
+                if(response.status === "OK"){
+                    window.location.href = host + "/user/login-page";
+                }else{
+                    window.location.reload();
+                }
+            }
+        });
     }
 </script>
 </html>

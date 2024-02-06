@@ -27,17 +27,17 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public List<CommentResponseDto> getComments(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id){
-        return commentService.getComments(id, userDetails.getUser());
+    public List<CommentResponseDto> getComments( @PathVariable Long id){
+        return commentService.getComments(id);
     }
 
     @PutMapping("/{commentId}")
-    public void editComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto){
-        commentService.editComment(commentId, commentRequestDto);
+    public void editComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto){
+        commentService.editComment(userDetails.getUser(), commentId, commentRequestDto);
     }
 
     @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Long commentId){
-        commentService.deleteComment(commentId);
+    public void deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId){
+        commentService.deleteComment(userDetails.getUser(), commentId);
     }
 }

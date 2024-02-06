@@ -26,7 +26,7 @@ public class CommentService {
         commentRepository.save(new Comment(commentRequestDto, user, todo));
     }
 
-    public List<CommentResponseDto> getComments(Long id, User user) {
+    public List<CommentResponseDto> getComments(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("등록된 적이 없는 할일입니다.")
         );
@@ -37,17 +37,21 @@ public class CommentService {
     }
 
     @Transactional
-    public void editComment(Long id, CommentRequestDto commentRequestDto) {
+    public void editComment(User user, Long id, CommentRequestDto commentRequestDto) {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("등록된 적이 없는 댓글입니다.")
         );
-        comment.update(commentRequestDto);
+        if(comment.getUser().equals(user)){
+            comment.update(commentRequestDto);
+        }
     }
 
-    public void deleteComment(Long commentId) {
+    public void deleteComment(User user, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new NullPointerException("등록된 적이 없는 댓글입니다.")
         );
-        commentRepository.delete(comment);
+        if(comment.getUser().equals(user)){
+            commentRepository.delete(comment);
+        }
     }
 }

@@ -125,7 +125,6 @@ function showCommentEdits(commentId) {
 function submitCommentEdit(commentId) {
     let content = $(`#${commentId}-comment-editArea`).val();
 
-
     // 3. 전달할 data JSON으로 만듭니다.
     let data = {'content': content};
 
