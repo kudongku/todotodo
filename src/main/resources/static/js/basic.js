@@ -141,19 +141,19 @@ function submitCommentEdit(commentId) {
         }
     });
 }
-//
-// //api 를 통해 삭제합니다.
-// function deleteComment(id) {
-//     $.ajax({
-//         type: "DELETE",
-//         url: `/comments/${id}`,
-//         contentType: "application/json",
-//         success: function () {
-//             alert('메시지 삭제에 성공하였습니다.');
-//             window.location.reload();
-//         }
-//     })
-// }
+
+//api 를 통해 삭제합니다.
+function deleteComment(commentId) {
+    $.ajax({
+        type: "DELETE",
+        url: `/comments/${commentId}`,
+        contentType: "application/json",
+        success: function () {
+            alert('메시지 삭제에 성공하였습니다.');
+            window.location.reload();
+        }
+    })
+}
 
 // 세부사항을 html 중간에 보여줍니다.
 function showDetailHTML(id, title, content, username, state, modifiedAt) {
