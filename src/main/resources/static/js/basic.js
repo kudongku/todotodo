@@ -121,12 +121,36 @@ function showDetailHTML(id, title, content, username, state, modifiedAt) {
                     <button onclick="deleteOne('${id}')">삭제하기</button>
                     <button onclick="submitEdit('${id}')" id="${id}-submit"> 제출하기</button>
                 </div>
+                
+                <div class="comment-area">
+                    <textarea id="${id}-comment-textarea" placeholder="댓글을 입력해주세요" cols="30" rows="1"></textarea>
+                    <button onclick="postComment('${id}')">전송하기</button>
+                    
+                    <div id="comment-box">
+                    
+                    </div>
+                </div>
         </div>`;
 
     // 2. #cards-box 에 HTML을 붙인다.
     $('#detail-box').append(tempHtml);
     $(`#${id}-editarea`).hide();
     $(`#${id}-submit`).hide();
+}
+function postComment(id) {
+    let content = $(`#${id}-comment-textarea`).val();
+    let data = {'content': content};
+
+    $.ajax({
+        type: "POST",
+        url: `/comments/${id}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            alert('댓글 달기에 성공하였습니다.');
+            window.location.reload();
+        }
+    });
 }
 
 // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
@@ -160,7 +184,7 @@ function submitEdit(id) {
         url: `/todos/${id}`,
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function (response) {
+        success: function () {
             alert('메시지 변경에 성공하였습니다.');
             window.location.reload();
         }
@@ -173,7 +197,7 @@ function deleteOne(id) {
         type: "DELETE",
         url: `/todos/${id}`,
         contentType: "application/json",
-        success: function (response) {
+        success: function () {
             alert('메시지 삭제에 성공하였습니다.');
             window.location.reload();
         }
@@ -185,7 +209,7 @@ function doingTodo(id) {
         type: "GET",
         url: `/todos/doing/${id}`,
         contentType: "application/json",
-        success: function (response) {
+        success: function () {
             alert('메시지 수정에 성공하였습니다.');
             window.location.reload();
         }
@@ -197,7 +221,7 @@ function doneTodo(id) {
         type: "GET",
         url: `/todos/done/${id}`,
         contentType: "application/json",
-        success: function (response) {
+        success: function () {
             alert('메시지 수정에 성공하였습니다.');
             window.location.reload();
         }

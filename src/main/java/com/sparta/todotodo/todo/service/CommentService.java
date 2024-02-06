@@ -1,0 +1,24 @@
+package com.sparta.todotodo.todo.service;
+
+import com.sparta.todotodo.todo.dto.CommentRequestDto;
+import com.sparta.todotodo.todo.entity.Comment;
+import com.sparta.todotodo.todo.entity.Todo;
+import com.sparta.todotodo.todo.repository.CommentRepository;
+import com.sparta.todotodo.todo.repository.TodoRepository;
+import com.sparta.todotodo.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+    private final CommentRepository commentRepository;
+    private final TodoRepository todoRepository;
+
+    public void createComment(Long id, CommentRequestDto commentRequestDto, User user) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("등록된 적이 없는 할일입니다.")
+        );
+        commentRepository.save(new Comment(commentRequestDto, user, todo));
+    }
+}
