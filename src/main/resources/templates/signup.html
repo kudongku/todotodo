@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h2>회원가입 페이지</h2>
+    </div>
+
+    <form action="/user/signup" method="post" class="block">
+        <div>
+            <label class="signup-id-label"> 아이디
+                <input type="text" name="username" class="signup-input">
+            </label>
+        </div>
+        <div>
+            <label class="signup-password-label">비밀번호
+                <input type="text" name="password" class="signup-input">
+            </label>
+        </div>
+        <div>
+            <label class="signup-email-label">이메일
+                <input type="text" name="email" class="signup-input">
+            </label>
+        </div>
+        <div>
+            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자
+            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="signup-input-box"
+                   style="display:none">
+        </div>
+        <button class="signup-submit">가입하기</button>
+    </form>
+</div>
+</body>
+<script>
+    function onclickAdmin() {
+        // Get the checkbox
+        const checkBox = document.getElementById("admin-check");
+        // Get the output text
+        const box = document.getElementById("admin-token");
+
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked === true) {
+            box.style.display = "block";
+        } else {
+            box.style.display = "none";
+        }
+    }
+</script>
+</html>
