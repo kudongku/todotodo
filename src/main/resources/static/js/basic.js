@@ -77,6 +77,82 @@ function showDetails(id) {
             showDetailHTML(id, title, content, username, state, modifiedAt);
         }
     })
+
+    $.ajax({
+        type: 'GET',
+        url: `/comments/${id}`,
+        success: function (response) {
+            for (let i = 0; i < response.length; i++) {
+                let commentId = response[i]['commentId']
+                let content = response[i]['content'];
+                createCommentHTML(commentId, content);
+            }
+        }
+    })
+}
+function createCommentHTML(commentId, content) {
+    // 1. HTML 태그를 만듭니다.
+    let tempHtml =
+        `<div class="card">
+            <div id="${commentId}-comment">${content}</div>
+            <textarea id="${commentId}-comment-editArea" cols="30" rows="10"></textarea>
+            <button id="${commentId}-comment-edit" onclick="editComment('${commentId}')">댓글 수정</button>
+            <button id="${commentId}-comment-submit" onclick="submitCommentEdit('${commentId}')">수정완료</button>
+            <button id="${commentId}-comment-delete" onclick="deleteComment('${commentId}')"> 댓글 삭제</button>
+        </div>`;
+
+    $('#comment-box').append(tempHtml);
+    $(`#${commentId}-comment-editArea`).hide();
+    $(`#${commentId}-comment-submit`).hide();
+}
+function editComment(commentId) {
+    showCommentEdits(commentId);
+    let title = $(`#${commentId}-title`).text().trim();
+    let content = $(`#${commentId}-content`).text().trim();
+    $(`#${commentId}-titleArea`).val(title);
+    $(`#${commentId}-contentArea`).val(content);
+}
+
+// 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
+function showCommentEdits(commentId) {
+    $(`#${commentId}-comment-editArea`).show();
+    $(`#${commentId}-comment-submit`).show();
+    $(`#${commentId}-comment-edit`).hide();
+    $(`#${commentId}-comment`).hide();
+}
+
+// 메모를 수정합니다.
+function submitCommentEdit(commentId) {
+    let content = $(`#${commentId}-comment-editArea`).val();
+
+
+    // 3. 전달할 data JSON으로 만듭니다.
+    let data = {'content': content};
+
+    // 4. PUT /api/memos/{id} 에 data를 전달합니다.
+    $.ajax({
+        type: "PUT",
+        url: `/comments/${commentId}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function () {
+            alert('메시지 변경에 성공하였습니다.');
+            window.location.reload();
+        }
+    });
+}
+
+//api 를 통해 삭제합니다.
+function deleteComment(commentId) {
+    $.ajax({
+        type: "DELETE",
+        url: `/comments/${commentId}`,
+        contentType: "application/json",
+        success: function () {
+            alert('메시지 삭제에 성공하였습니다.');
+            window.location.reload();
+        }
+    })
 }
 
 // 세부사항을 html 중간에 보여줍니다.
@@ -121,12 +197,36 @@ function showDetailHTML(id, title, content, username, state, modifiedAt) {
                     <button onclick="deleteOne('${id}')">삭제하기</button>
                     <button onclick="submitEdit('${id}')" id="${id}-submit"> 제출하기</button>
                 </div>
+                
+                <div class="comment-area">
+                    <textarea id="${id}-comment-textarea" placeholder="댓글을 입력해주세요" cols="30" rows="1"></textarea>
+                    <button onclick="postComment('${id}')">전송하기</button>
+                    
+                    <div id="comment-box">
+                    
+                    </div>
+                </div>
         </div>`;
 
     // 2. #cards-box 에 HTML을 붙인다.
     $('#detail-box').append(tempHtml);
     $(`#${id}-editarea`).hide();
     $(`#${id}-submit`).hide();
+}
+function postComment(id) {
+    let content = $(`#${id}-comment-textarea`).val();
+    let data = {'content': content};
+
+    $.ajax({
+        type: "POST",
+        url: `/comments/${id}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            alert('댓글 달기에 성공하였습니다.');
+            window.location.reload();
+        }
+    });
 }
 
 // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
@@ -160,7 +260,7 @@ function submitEdit(id) {
         url: `/todos/${id}`,
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function (response) {
+        success: function () {
             alert('메시지 변경에 성공하였습니다.');
             window.location.reload();
         }
@@ -173,7 +273,7 @@ function deleteOne(id) {
         type: "DELETE",
         url: `/todos/${id}`,
         contentType: "application/json",
-        success: function (response) {
+        success: function () {
             alert('메시지 삭제에 성공하였습니다.');
             window.location.reload();
         }
@@ -185,7 +285,7 @@ function doingTodo(id) {
         type: "GET",
         url: `/todos/doing/${id}`,
         contentType: "application/json",
-        success: function (response) {
+        success: function () {
             alert('메시지 수정에 성공하였습니다.');
             window.location.reload();
         }
@@ -197,7 +297,7 @@ function doneTodo(id) {
         type: "GET",
         url: `/todos/done/${id}`,
         contentType: "application/json",
-        success: function (response) {
+        success: function () {
             alert('메시지 수정에 성공하였습니다.');
             window.location.reload();
         }
