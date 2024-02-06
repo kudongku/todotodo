@@ -17,7 +17,18 @@ public class SignupRequestDto {
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "이메일 에러")
     private String email;
 
-    private boolean admin = false;
+    private boolean admin;
 
     private String adminToken = "";
+
+    @Override
+    public String toString() {
+        return "SignupRequestDto{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", admin=" + admin +
+                ", adminToken='" + adminToken + '\'' +
+                '}';
+    }
 }

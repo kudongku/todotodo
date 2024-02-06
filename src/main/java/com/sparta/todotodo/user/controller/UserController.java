@@ -5,11 +5,14 @@ import com.sparta.todotodo.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -33,7 +36,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid SignupRequestDto signupRequestDto, BindingResult bindingResult) {
+    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequestDto signupRequestDto, BindingResult bindingResult) {
+        System.out.println("signupRequestDto.toString() = " + signupRequestDto.toString());
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
@@ -41,14 +45,12 @@ public class UserController {
 
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+                return new ResponseEntity<>("회원가입 실패", HttpStatus.BAD_REQUEST);
             }
 
-            return "redirect:/user/signup";
         }
 
-        userService.signup(signupRequestDto);
-
-        return "redirect:/user/login-page";
+        return userService.signup(signupRequestDto);
     }
 
 }
