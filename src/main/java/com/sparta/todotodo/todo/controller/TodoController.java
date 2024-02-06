@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,13 +20,13 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("")
-    public void createTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TodoRequestDto todoRequestDto) {
-        todoService.createTodo(userDetails.getUser(), todoRequestDto);
+    public TodoResponseDto createTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TodoRequestDto todoRequestDto) {
+        return todoService.createTodo(userDetails.getUser(), todoRequestDto);
     }
 
     @GetMapping("")
-    public List<TodoResponseDto> getTodoList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return todoService.getTodoList(userDetails.getUser());
+    public Map<String, List<TodoResponseDto>> getTodoList() {
+        return todoService.getTodoList();
     }
 
     @GetMapping("/{id}")
@@ -34,8 +35,8 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public void updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto){
-        todoService.updateTodo(todoRequestDto, id);
+    public TodoResponseDto updateTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto){
+        return todoService.updateTodo(userDetails.getUser(), todoRequestDto, id);
     }
 
     @DeleteMapping("/{id}")

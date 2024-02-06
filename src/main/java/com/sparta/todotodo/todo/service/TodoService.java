@@ -5,11 +5,14 @@ import com.sparta.todotodo.todo.dto.TodoResponseDto;
 import com.sparta.todotodo.todo.entity.Todo;
 import com.sparta.todotodo.todo.repository.TodoRepository;
 import com.sparta.todotodo.user.entity.User;
+import com.sparta.todotodo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.sparta.todotodo.user.entity.UserRole.ADMIN;
@@ -19,24 +22,27 @@ import static com.sparta.todotodo.user.entity.UserRole.USER;
 @RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
+    private final UserRepository userRepository;
 
-    public void createTodo(User user, TodoRequestDto todoRequestDto) {
+    public TodoResponseDto createTodo(User user, TodoRequestDto todoRequestDto) {
         Todo todo = new Todo(user, todoRequestDto);
         todoRepository.save(todo);
+        return new TodoResponseDto(todo);
     }
 
-    public List<TodoResponseDto> getTodoList(User user) {
-        if (user.getRole().equals(USER)) {
-            return todoRepository.findAllByUser(user)
-                    .stream()
-                    .map(TodoResponseDto::new)
-                    .toList();
-        } else {
-            return todoRepository.findAll()
-                    .stream()
-                    .map(TodoResponseDto::new)
-                    .toList();
-        }
+    public Map<String, List<TodoResponseDto>> getTodoList() {
+        Map<String, List<TodoResponseDto>> map = new HashMap<>();
+
+        userRepository.findAll()
+                .forEach(user ->{
+                    String username = user.getUsername();
+                    List<TodoResponseDto> todoList = todoRepository.findAllByUser(user)
+                            .stream()
+                            .map(TodoResponseDto::new)
+                            .toList();
+                    map.put(username, todoList);
+                });
+        return map;
     }
 
     public TodoResponseDto getTodo(User user, Long id) {
@@ -52,12 +58,16 @@ public class TodoService {
     }
 
     @Transactional
-    public void updateTodo(TodoRequestDto todoRequestDto, Long id) {
+    public TodoResponseDto updateTodo(User user, TodoRequestDto todoRequestDto, Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("등록된 적이 없는 할일입니다.")
         );
-
-        todo.update(todoRequestDto);
+        if(todo.getUser().equals(user)){
+            todo.update(todoRequestDto);
+            return new TodoResponseDto(todo);
+        }else{
+            throw new IllegalArgumentException("작성자 본인만 수정이 가능합니다.");
+        }
     }
 
     public void deleteTodo(User user, Long id) {
