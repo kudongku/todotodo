@@ -77,6 +77,26 @@ function showDetails(id) {
             showDetailHTML(id, title, content, username, state, modifiedAt);
         }
     })
+
+    $.ajax({
+        type: 'GET',
+        url: `/comments/${id}`,
+        success: function (response) {
+            for (let i = 0; i < response.length; i++) {
+                let content = response[i]['content'];
+                createCommentHTML(id, content);
+            }
+        }
+    })
+}
+function createCommentHTML(id, content) {
+    // 1. HTML 태그를 만듭니다.
+    let tempHtml =
+        `<div class="card">
+            <div id="${id}-comment">${content}</div>
+        </div>`;
+
+    $('#comment-box').append(tempHtml);
 }
 
 // 세부사항을 html 중간에 보여줍니다.
