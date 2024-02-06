@@ -83,21 +83,77 @@ function showDetails(id) {
         url: `/comments/${id}`,
         success: function (response) {
             for (let i = 0; i < response.length; i++) {
+                let commentId = response[i]['commentId']
                 let content = response[i]['content'];
-                createCommentHTML(id, content);
+                createCommentHTML(commentId, content);
             }
         }
     })
 }
-function createCommentHTML(id, content) {
+function createCommentHTML(commentId, content) {
     // 1. HTML 태그를 만듭니다.
     let tempHtml =
         `<div class="card">
-            <div id="${id}-comment">${content}</div>
+            <div id="${commentId}-comment">${content}</div>
+            <textarea id="${commentId}-comment-editArea" cols="30" rows="10"></textarea>
+            <button id="${commentId}-comment-edit" onclick="editComment('${commentId}')">댓글 수정</button>
+            <button id="${commentId}-comment-submit" onclick="submitCommentEdit('${commentId}')">수정완료</button>
+            <button id="${commentId}-comment-delete" onclick="deleteComment('${commentId}')"> 댓글 삭제</button>
         </div>`;
 
     $('#comment-box').append(tempHtml);
+    $(`#${commentId}-comment-editArea`).hide();
+    $(`#${commentId}-comment-submit`).hide();
 }
+function editComment(commentId) {
+    showCommentEdits(commentId);
+    let title = $(`#${commentId}-title`).text().trim();
+    let content = $(`#${commentId}-content`).text().trim();
+    $(`#${commentId}-titleArea`).val(title);
+    $(`#${commentId}-contentArea`).val(content);
+}
+
+// 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
+function showCommentEdits(commentId) {
+    $(`#${commentId}-comment-editArea`).show();
+    $(`#${commentId}-comment-submit`).show();
+    $(`#${commentId}-comment-edit`).hide();
+    $(`#${commentId}-comment`).hide();
+}
+
+// 메모를 수정합니다.
+function submitCommentEdit(commentId) {
+    let content = $(`#${commentId}-comment-editArea`).val();
+
+
+    // 3. 전달할 data JSON으로 만듭니다.
+    let data = {'content': content};
+
+    // 4. PUT /api/memos/{id} 에 data를 전달합니다.
+    $.ajax({
+        type: "PUT",
+        url: `/comments/${commentId}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function () {
+            alert('메시지 변경에 성공하였습니다.');
+            window.location.reload();
+        }
+    });
+}
+//
+// //api 를 통해 삭제합니다.
+// function deleteComment(id) {
+//     $.ajax({
+//         type: "DELETE",
+//         url: `/comments/${id}`,
+//         contentType: "application/json",
+//         success: function () {
+//             alert('메시지 삭제에 성공하였습니다.');
+//             window.location.reload();
+//         }
+//     })
+// }
 
 // 세부사항을 html 중간에 보여줍니다.
 function showDetailHTML(id, title, content, username, state, modifiedAt) {

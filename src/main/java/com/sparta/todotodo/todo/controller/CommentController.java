@@ -30,4 +30,9 @@ public class CommentController {
     public List<CommentResponseDto> getComments(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id){
         return commentService.getComments(id, userDetails.getUser());
     }
+
+    @PutMapping("/{commentId}")
+    public void editComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto){
+        commentService.editComment(commentId, commentRequestDto);
+    }
 }

@@ -9,6 +9,7 @@ import com.sparta.todotodo.todo.repository.TodoRepository;
 import com.sparta.todotodo.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,5 +34,13 @@ public class CommentService {
         return todoList.stream()
                 .map(CommentResponseDto::new)
                 .toList();
+    }
+
+    @Transactional
+    public void editComment(Long id, CommentRequestDto commentRequestDto) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("등록된 적이 없는 댓글입니다.")
+        );
+        comment.update(commentRequestDto);
     }
 }
