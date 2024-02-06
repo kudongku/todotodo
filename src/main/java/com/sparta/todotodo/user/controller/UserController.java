@@ -37,8 +37,6 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody @Valid SignupRequestDto signupRequestDto, BindingResult bindingResult) {
-        System.out.println("signupRequestDto.toString() = " + signupRequestDto.toString());
-        // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
         if (!fieldErrors.isEmpty()) {

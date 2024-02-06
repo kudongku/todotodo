@@ -20,15 +20,4 @@ public class SignupRequestDto {
     private boolean admin;
 
     private String adminToken = "";
-
-    @Override
-    public String toString() {
-        return "SignupRequestDto{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", admin=" + admin +
-                ", adminToken='" + adminToken + '\'' +
-                '}';
-    }
 }

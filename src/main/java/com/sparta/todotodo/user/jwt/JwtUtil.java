@@ -23,16 +23,6 @@ import java.util.Date;
 @Component
 @Slf4j(topic = "JwtUtil")
 public class JwtUtil {
-    /*
-    util 이란 특정한 파라미터에 대한 작업을 수행하는 하나의 모듈
-    JwtUtil에서는
-    1. Jwt를 생성하고
-    2. 생성된 Jwt를 쿠키에 저장한다음
-    3. 쿠키에 있는 jwt 토큰을 substring
-    4. jwt가 valid한지 검증
-    5. jwt에서 사용자 정보 가져오기
-    기능이 있어야한다.
-     */
 
     // Header KEY 값, cookie의 name 값?
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -44,9 +34,10 @@ public class JwtUtil {
     public static final String BEARER_PREFIX = "Bearer ";
 
     // 토큰 만료시간
-    private final long TOKEN_TIME = 30 * 60 * 1000L; // 30분
+    private static final long TOKEN_TIME = 30 * 60 * 1000L; // 30분
 
-    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey, application properties에서 가져옴
+    // Base64 Encode 한 SecretKey, application properties에서 가져옴
+    @Value("${jwt.secret.key}")
     private String secretKey;
 
     //secretKey가 담기는 공간
