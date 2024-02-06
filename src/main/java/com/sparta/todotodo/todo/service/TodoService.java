@@ -58,12 +58,16 @@ public class TodoService {
     }
 
     @Transactional
-    public void updateTodo(TodoRequestDto todoRequestDto, Long id) {
+    public TodoResponseDto updateTodo(User user, TodoRequestDto todoRequestDto, Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("등록된 적이 없는 할일입니다.")
         );
-
-        todo.update(todoRequestDto);
+        if(todo.getUser().equals(user)){
+            todo.update(todoRequestDto);
+            return new TodoResponseDto(todo);
+        }else{
+            throw new IllegalArgumentException("작성자 본인만 수정이 가능합니다.");
+        }
     }
 
     public void deleteTodo(User user, Long id) {
