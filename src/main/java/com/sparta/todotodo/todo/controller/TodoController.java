@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +25,8 @@ public class TodoController {
     }
 
     @GetMapping("")
-    public List<TodoResponseDto> getTodoList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return todoService.getTodoList(userDetails.getUser());
+    public Map<String, List<TodoResponseDto>> getTodoList() {
+        return todoService.getTodoList();
     }
 
     @GetMapping("/{id}")
