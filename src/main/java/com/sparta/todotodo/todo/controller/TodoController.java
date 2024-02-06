@@ -19,8 +19,8 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("")
-    public void createTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TodoRequestDto todoRequestDto) {
-        todoService.createTodo(userDetails.getUser(), todoRequestDto);
+    public TodoResponseDto createTodo(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TodoRequestDto todoRequestDto) {
+        return todoService.createTodo(userDetails.getUser(), todoRequestDto);
     }
 
     @GetMapping("")

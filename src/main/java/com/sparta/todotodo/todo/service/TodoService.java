@@ -20,9 +20,10 @@ import static com.sparta.todotodo.user.entity.UserRole.USER;
 public class TodoService {
     private final TodoRepository todoRepository;
 
-    public void createTodo(User user, TodoRequestDto todoRequestDto) {
+    public TodoResponseDto createTodo(User user, TodoRequestDto todoRequestDto) {
         Todo todo = new Todo(user, todoRequestDto);
         todoRepository.save(todo);
+        return new TodoResponseDto(todo);
     }
 
     public List<TodoResponseDto> getTodoList(User user) {
